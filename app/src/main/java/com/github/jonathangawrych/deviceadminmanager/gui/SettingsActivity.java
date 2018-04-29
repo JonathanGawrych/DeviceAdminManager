@@ -1,9 +1,7 @@
 package com.github.jonathangawrych.deviceadminmanager.gui;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -35,26 +33,14 @@ import java.util.List;
  */
 public class SettingsActivity extends PreferenceActivity {
 	
-	/**
-	 * Helper method to determine if the device has an extra-large screen. For
-	 * example, 10" tablets are extra-large.
-	 */
-	private static boolean isXLargeTablet(Context context) {
-		return (context.getResources().getConfiguration().screenLayout
-				& Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
-	}
-	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean onIsMultiPane() {
-		return isXLargeTablet(this);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+			return;
+		
+		addPreferencesFromResource(R.xml.pref_category);
 	}
 	
 	/**
@@ -70,8 +56,10 @@ public class SettingsActivity extends PreferenceActivity {
 	 * This method stops fragment injection in malicious applications.
 	 * Make sure to deny any unknown fragments here.
 	 */
+	@Override
 	protected boolean isValidFragment(String fragmentName) {
-		return PreferenceFragment.class.getName().equals(fragmentName)
+		return Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
+			|| PreferenceFragment.class.getName().equals(fragmentName)
 			|| CategoryPreferenceFragment.class.getName().equals(fragmentName);
 	}
 	

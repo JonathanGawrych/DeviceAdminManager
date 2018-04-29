@@ -5,7 +5,7 @@ android {
 	compileSdkVersion 27
 	defaultConfig {
 		applicationId "com.github.jonathangawrych.deviceadminmanager"
-		minSdkVersion 14
+		minSdkVersion 1
 		targetSdkVersion 27
 		versionCode buildVersionCode()
 		versionName version
