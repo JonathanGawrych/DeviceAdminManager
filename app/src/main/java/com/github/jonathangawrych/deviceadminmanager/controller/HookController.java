@@ -48,6 +48,7 @@ public class HookController implements IXposedHookZygoteInit {
 		// Kitkat had no api changes to device admin
 		HookLollipop();
 		HookMarshmallow();
+		HookNougat();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -397,6 +398,66 @@ public class HookController implements IXposedHookZygoteInit {
 		attemptHookMethod(DeviceAdminReceiver.class, "onChoosePrivateKeyAlias", Context.class, Intent.class, int.class, Uri.class, String.class);
 		attemptHookMethod(DeviceAdminReceiver.class, "onReadyForUserInitialization", Context.class, Intent.class);
 		attemptHookMethod(DeviceAdminReceiver.class, "onSystemUpdatePending", Context.class, Intent.class, long.class);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.N)
+	private void HookNougat() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
+			return;
+		
+		Log.d(TAG, "Hooking Nougat Admin Methods");
+		
+		attemptHookMethod(DevicePolicyManager.class, "clearProfileOwner", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "createAndManageUser", ComponentName.class, String.class, ComponentName.class, PersistableBundle.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "getAlwaysOnVpnPackage", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getApplicationRestrictionsManagingPackage", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getCrossProfileContactsSearchDisabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getDeviceOwnerLockScreenInfo");
+		attemptHookMethod(DevicePolicyManager.class, "getLongSupportMessage", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getOrganizationColor", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getOrganizationName", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getParentProfileInstance", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getShortSupportMessage", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getUserRestrictions", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getWifiMacAddress", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "installKeyPair", ComponentName.class, PrivateKey.class, Certificate[].class, String.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "isCallerApplicationRestrictionsManagingPackage");
+		attemptHookMethod(DevicePolicyManager.class, "isManagedProfile", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "isPackageSuspended", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "isProvisioningAllowed", String.class);
+		attemptHookMethod(DevicePolicyManager.class, "isSecurityLoggingEnabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "reboot", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "removeKeyPair", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "requestBugreport", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "retrievePreRebootSecurityLogs", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "retrieveSecurityLogs", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "setAlwaysOnVpnPackage", ComponentName.class, String.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setApplicationRestrictionsManagingPackage", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "setCrossProfileContactsSearchDisabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setDeviceOwnerLockScreenInfo", ComponentName.class, CharSequence.class);
+		attemptHookMethod(DevicePolicyManager.class, "setLongSupportMessage", ComponentName.class, CharSequence.class);
+		attemptHookMethod(DevicePolicyManager.class, "setOrganizationColor", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setOrganizationName", ComponentName.class, CharSequence.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPackagesSuspended", ComponentName.class, String[].class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setSecurityLoggingEnabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setShortSupportMessage", ComponentName.class, CharSequence.class);
+		
+		// DevicePolicyManager Constants:
+		// ACTION_SET_NEW_PARENT_PROFILE_PASSWORD
+		// ENCRYPTION_STATUS_ACTIVE_PER_USER
+		// EXTRA_PROVISIONING_LOGO_URI
+		// EXTRA_PROVISIONING_MAIN_COLOR
+		// KEYGUARD_DISABLE_REMOTE_INPUT
+		// SKIP_SETUP_WIZARD
+		
+		attemptHookMethod(DeviceAdminReceiver.class, "onBugreportFailed", Context.class, Intent.class, int.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onBugreportShared", Context.class, Intent.class, String.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onBugreportSharingDeclined", Context.class, Intent.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onSecurityLogsAvailable", Context.class, Intent.class);
+		
+		// DeviceAdminReceiver Constants:
+		// BUGREPORT_FAILURE_FAILED_COMPLETING
+		// BUGREPORT_FAILURE_FILE_NO_LONGER_AVAILABLE
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
