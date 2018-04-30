@@ -4,15 +4,19 @@ import android.annotation.TargetApi;
 import android.app.admin.DeviceAdminInfo;
 import android.app.admin.DeviceAdminReceiver;
 import android.app.admin.DevicePolicyManager;
+import android.app.admin.SystemUpdatePolicy;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.ProxyInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.os.PersistableBundle;
 import android.os.UserHandle;
 import android.util.Log;
 import android.util.Printer;
@@ -43,6 +47,7 @@ public class HookController implements IXposedHookZygoteInit {
 		HookJellyBean();
 		// Kitkat had no api changes to device admin
 		HookLollipop();
+		HookMarshmallow();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -337,6 +342,61 @@ public class HookController implements IXposedHookZygoteInit {
 		// EXTRA_PROVISIONING_ACCOUNT_TO_MIGRATE
 		// EXTRA_PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED
 		// WIPE_RESET_PROTECTION_DATA
+	}
+	
+	@TargetApi(Build.VERSION_CODES.M)
+	private void HookMarshmallow() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+			return;
+		
+		Log.d(TAG, "Hooking Marshmallow Admin Methods");
+		
+		attemptHookMethod(DevicePolicyManager.class, "getBluetoothContactSharingDisabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getCertInstallerPackage", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPermissionGrantState", ComponentName.class, String.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPermissionPolicy", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getSystemUpdatePolicy");
+		attemptHookMethod(DevicePolicyManager.class, "getTrustAgentConfiguration", ComponentName.class, ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "setBluetoothContactSharingDisabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setCertInstallerPackage", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "setKeyguardDisabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPermissionGrantState", ComponentName.class, String.class, String.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPermissionPolicy", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setStatusBarDisabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setSystemUpdatePolicy", ComponentName.class, SystemUpdatePolicy.class);
+		attemptHookMethod(DevicePolicyManager.class, "setTrustAgentConfiguration", ComponentName.class, ComponentName.class, PersistableBundle.class);
+		attemptHookMethod(DevicePolicyManager.class, "setUserIcon", ComponentName.class, Bitmap.class);
+		
+		// DevicePolicyManager Constants:
+		// EXTRA_PROVISIONING_ADMIN_EXTRAS_BUNDLE
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_COOKIE_HEADER
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_NAME
+		// EXTRA_PROVISIONING_EMAIL_ADDRESS
+		// EXTRA_PROVISIONING_LOCALE
+		// EXTRA_PROVISIONING_LOCAL_TIME
+		// EXTRA_PROVISIONING_TIME_ZONE
+		// EXTRA_PROVISIONING_WIFI_HIDDEN
+		// EXTRA_PROVISIONING_WIFI_PAC_URL
+		// EXTRA_PROVISIONING_WIFI_PASSWORD
+		// EXTRA_PROVISIONING_WIFI_PROXY_BYPASS
+		// EXTRA_PROVISIONING_WIFI_PROXY_HOST
+		// EXTRA_PROVISIONING_WIFI_PROXY_PORT
+		// EXTRA_PROVISIONING_WIFI_SECURITY_TYPE
+		// EXTRA_PROVISIONING_WIFI_SSID
+		// FLAG_MANAGED_CAN_ACCESS_PARENT
+		// FLAG_PARENT_CAN_ACCESS_MANAGED
+		// KEYGUARD_DISABLE_FINGERPRINT
+		// KEYGUARD_DISABLE_SECURE_NOTIFICATIONS
+		// KEYGUARD_DISABLE_TRUST_AGENTS
+		// KEYGUARD_DISABLE_UNREDACTED_NOTIFICATIONS
+		// MIME_TYPE_PROVISIONING_NFC
+		// PASSWORD_QUALITY_NUMERIC_COMPLEX
+		
+		attemptHookMethod(DeviceAdminReceiver.class, "onChoosePrivateKeyAlias", Context.class, Intent.class, int.class, Uri.class, String.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onReadyForUserInitialization", Context.class, Intent.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onSystemUpdatePending", Context.class, Intent.class, long.class);
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
