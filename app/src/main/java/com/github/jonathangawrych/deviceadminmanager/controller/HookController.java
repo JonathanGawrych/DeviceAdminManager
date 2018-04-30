@@ -1,5 +1,6 @@
 package com.github.jonathangawrych.deviceadminmanager.controller;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.admin.DeviceAdminInfo;
 import android.app.admin.DeviceAdminReceiver;
@@ -52,6 +53,7 @@ public class HookController implements IXposedHookZygoteInit {
 		HookMarshmallow();
 		HookNougat();
 		HookOreo();
+		HookPopsicle();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -522,6 +524,15 @@ public class HookController implements IXposedHookZygoteInit {
 		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordSucceeded", Context.class, Intent.class, UserHandle.class);
 		attemptHookMethod(DeviceAdminReceiver.class, "onUserAdded", Context.class, Intent.class, UserHandle.class);
 		attemptHookMethod(DeviceAdminReceiver.class, "onUserRemoved", Context.class, Intent.class, UserHandle.class);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.CUR_DEVELOPMENT)
+	private void HookPopsicle() {
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
+			return;
+		
+		Log.w(TAG, "Newer SDK than Oreo 8.1 (SDK 27). Api hooks do not account for later than Oreo's methods");
+		Log.d(TAG, "Hooking P(opsicle?) Admin Methods");
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
