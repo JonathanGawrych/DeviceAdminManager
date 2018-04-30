@@ -33,6 +33,7 @@ public class HookController implements IXposedHookZygoteInit {
 		HookGingerbread();
 		HookHoneycomb();
 		HookIceCreamSandwich();
+		HookJellyBean();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -189,6 +190,38 @@ public class HookController implements IXposedHookZygoteInit {
 		
 		// DevicePolicyManager Constants:
 		// PASSWORD_QUALITY_BIOMETRIC_WEAK
+	}
+	
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	private void HookJellyBean() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
+			return;
+		
+		// DeviceAdminInfo Constants:
+		// USES_POLICY_DISABLE_KEYGUARD_FEATURES
+		
+		Log.d(TAG, "Hooking JellyBean Admin Methods");
+		
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1)
+			return;
+		
+		Log.v(TAG, "Hooking JellyBean MR1 Admin Methods");
+		
+		attemptHookMethod(DevicePolicyManager.class, "getKeyguardDisabledFeatures", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "setKeyguardDisabledFeatures", ComponentName.class, int.class);
+		
+		// DevicePolicyManager Constants:
+		// KEYGUARD_DISABLE_FEATURES_ALL
+		// KEYGUARD_DISABLE_FEATURES_NONE
+		// KEYGUARD_DISABLE_SECURE_CAMERA
+		// KEYGUARD_DISABLE_WIDGETS_ALL
+		
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2)
+			return;
+		
+		Log.v(TAG, "Hooking JellyBean MR2 Admin Methods");
+		
+		attemptHookMethod(DevicePolicyManager.class, "isDeviceOwnerApp", ComponentName.class);
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
