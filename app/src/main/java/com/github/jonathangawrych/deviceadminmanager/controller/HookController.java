@@ -30,6 +30,7 @@ public class HookController implements IXposedHookZygoteInit {
 		Log.i(TAG, TAG + " loaded");
 	
 		HookFroyo();
+		HookGingerbread();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -111,6 +112,17 @@ public class HookController implements IXposedHookZygoteInit {
 		// ACTION_PASSWORD_SUCCEEDED
 		// DEVICE_ADMIN_META_DATA
 		// EXTRA_DISABLE_WARNING
+	}
+	
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	private void HookGingerbread() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD)
+			return;
+		
+		Log.d(TAG, "Hooking Gingerbread Admin Methods");
+		
+		// DevicePolicyManager Constants:
+		// WIPE_EXTERNAL_STORAGE
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
