@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.ProxyInfo;
@@ -25,6 +26,7 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
@@ -49,6 +51,7 @@ public class HookController implements IXposedHookZygoteInit {
 		HookLollipop();
 		HookMarshmallow();
 		HookNougat();
+		HookOreo();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -458,6 +461,67 @@ public class HookController implements IXposedHookZygoteInit {
 		// DeviceAdminReceiver Constants:
 		// BUGREPORT_FAILURE_FAILED_COMPLETING
 		// BUGREPORT_FAILURE_FILE_NO_LONGER_AVAILABLE
+	}
+	
+	@TargetApi(Build.VERSION_CODES.O)
+	private void HookOreo() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+			return;
+		
+		Log.d(TAG, "Hooking Oreo Admin Methods");
+		
+		attemptHookMethod(DevicePolicyManager.class, "bindDeviceAdminServiceAsUser", ComponentName.class, Intent.class, ServiceConnection.class, int.class, UserHandle.class);
+		attemptHookMethod(DevicePolicyManager.class, "clearResetPasswordToken", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "createAdminSupportIntent", String.class);
+		attemptHookMethod(DevicePolicyManager.class, "getAffiliationIds", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getBindDeviceAdminTargetUsers", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getDelegatePackages", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "getDelegatedScopes", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "getLockTaskPackages", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPendingSystemUpdate", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPermittedCrossProfileNotificationListeners", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getRequiredStrongAuthTimeout", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "isBackupServiceEnabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "isNetworkLoggingEnabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "isResetPasswordTokenActive", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "lockNow", int.class);
+		attemptHookMethod(DevicePolicyManager.class, "resetPasswordWithToken", ComponentName.class, String.class, byte[].class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "retrieveNetworkLogs", ComponentName.class, long.class);
+		attemptHookMethod(DevicePolicyManager.class, "setAffiliationIds", ComponentName.class, Set.class);
+		attemptHookMethod(DevicePolicyManager.class, "setBackupServiceEnabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setDelegatedScopes", ComponentName.class, String.class, List.class);
+		attemptHookMethod(DevicePolicyManager.class, "setNetworkLoggingEnabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPermittedCrossProfileNotificationListeners", ComponentName.class, List.class);
+		attemptHookMethod(DevicePolicyManager.class, "setRequiredStrongAuthTimeout", ComponentName.class, long.class);
+		attemptHookMethod(DevicePolicyManager.class, "setResetPasswordToken", ComponentName.class, byte[].class);
+		
+		// DevicePolicyManager Constants:
+		// ACTION_APPLICATION_DELEGATION_SCOPES_CHANGED
+		// ACTION_DEVICE_ADMIN_SERVICE
+		// ACTION_PROVISIONING_SUCCESSFUL
+		// DELEGATION_APP_RESTRICTIONS
+		// DELEGATION_BLOCK_UNINSTALL
+		// DELEGATION_CERT_INSTALL
+		// DELEGATION_ENABLE_SYSTEM_APP
+		// DELEGATION_PACKAGE_ACCESS
+		// DELEGATION_PERMISSION_GRANT
+		// EXTRA_DELEGATION_SCOPES
+		// EXTRA_PROVISIONING_DISCLAIMERS
+		// EXTRA_PROVISIONING_DISCLAIMER_CONTENT
+		// EXTRA_PROVISIONING_DISCLAIMER_HEADER
+		// EXTRA_PROVISIONING_KEEP_ACCOUNT_ON_MIGRATION
+		// EXTRA_PROVISIONING_SKIP_USER_CONSENT
+		// FLAG_EVICT_CREDENTIAL_ENCRYPTION_KEY
+		// POLICY_DISABLE_CAMERA
+		// POLICY_DISABLE_SCREEN_CAPTURE
+		
+		attemptHookMethod(DeviceAdminReceiver.class, "onNetworkLogsAvailable", Context.class, Intent.class, long.class, int.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordChanged", Context.class, Intent.class, UserHandle.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordExpiring", Context.class, Intent.class, UserHandle.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordFailed", Context.class, Intent.class, UserHandle.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordSucceeded", Context.class, Intent.class, UserHandle.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onUserAdded", Context.class, Intent.class, UserHandle.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onUserRemoved", Context.class, Intent.class, UserHandle.class);
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
