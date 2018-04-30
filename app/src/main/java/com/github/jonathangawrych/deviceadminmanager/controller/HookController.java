@@ -7,13 +7,20 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.ProxyInfo;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Parcel;
+import android.os.UserHandle;
 import android.util.Log;
 import android.util.Printer;
 
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
 import java.util.Arrays;
+import java.util.List;
 
 import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
@@ -34,6 +41,8 @@ public class HookController implements IXposedHookZygoteInit {
 		HookHoneycomb();
 		HookIceCreamSandwich();
 		HookJellyBean();
+		// Kitkat had no api changes to device admin
+		HookLollipop();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -222,6 +231,112 @@ public class HookController implements IXposedHookZygoteInit {
 		Log.v(TAG, "Hooking JellyBean MR2 Admin Methods");
 		
 		attemptHookMethod(DevicePolicyManager.class, "isDeviceOwnerApp", ComponentName.class);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+	private void HookLollipop() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+			return;
+		
+		Log.d(TAG, "Hooking Lollipop Admin Methods");
+		
+		attemptHookMethod(DevicePolicyManager.class, "addCrossProfileIntentFilter", ComponentName.class, IntentFilter.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "addCrossProfileWidgetProvider", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "addPersistentPreferredActivity", ComponentName.class, IntentFilter.class, ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "addUserRestriction", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "clearCrossProfileIntentFilters", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "clearDeviceOwnerApp", String.class);
+		attemptHookMethod(DevicePolicyManager.class, "clearPackagePersistentPreferredActivities", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "clearUserRestriction", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "enableSystemApp", ComponentName.class, IntentFilter.class);
+		attemptHookMethod(DevicePolicyManager.class, "enableSystemApp", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "getAccountTypesWithManagementDisabled");
+		attemptHookMethod(DevicePolicyManager.class, "getApplicationRestrictions", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "getAutoTimeRequired");
+		attemptHookMethod(DevicePolicyManager.class, "getCrossProfileCallerIdDisabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getCrossProfileWidgetProviders", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getInstalledCaCerts", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPermittedAccessibilityServices", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPermittedInputMethods", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getScreenCaptureDisabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "hasCaCertInstalled", ComponentName.class, byte[].class);
+		attemptHookMethod(DevicePolicyManager.class, "installCaCert", ComponentName.class, byte[].class);
+		attemptHookMethod(DevicePolicyManager.class, "installKeyPair", ComponentName.class, PrivateKey.class, Certificate.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "isApplicationHidden", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "isLockTaskPermitted", String.class);
+		attemptHookMethod(DevicePolicyManager.class, "isMasterVolumeMuted", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "isProfileOwnerApp", String.class);
+		attemptHookMethod(DevicePolicyManager.class, "isUninstallBlocked", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "removeCrossProfileWidgetProvider", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "removeUser", ComponentName.class, UserHandle.class);
+		attemptHookMethod(DevicePolicyManager.class, "setAccountManagementDisabled", ComponentName.class, String.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setApplicationHidden", ComponentName.class, String.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setApplicationRestrictions", ComponentName.class, String.class, Bundle.class);
+		attemptHookMethod(DevicePolicyManager.class, "setAutoTimeRequired", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setCrossProfileCallerIdDisabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setGlobalSetting", ComponentName.class, String.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "setLockTaskPackages", ComponentName.class, String.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "setMasterVolumeMuted", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPermittedAccessibilityServices", ComponentName.class, List.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPermittedInputMethods", ComponentName.class, List.class);
+		attemptHookMethod(DevicePolicyManager.class, "setProfileEnabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "setProfileName", ComponentName.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "setRecommendedGlobalProxy", ComponentName.class, ProxyInfo.class);
+		attemptHookMethod(DevicePolicyManager.class, "setRestrictionsProvider", ComponentName.class, ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "setScreenCaptureDisabled", ComponentName.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "setSecureSetting", ComponentName.class, String.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "setUninstallBlocked", ComponentName.class, String.class, boolean.class);
+		attemptHookMethod(DevicePolicyManager.class, "switchUser", ComponentName.class, UserHandle.class);
+		attemptHookMethod(DevicePolicyManager.class, "uninstallAllUserCaCerts", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "uninstallCaCert", ComponentName.class, byte[].class);
+		
+		// DevicePolicyManager Constants:
+		// ACTION_PROVISION_MANAGED_PROFILE
+		// EXTRA_PROVISIONING_ADMIN_EXTRAS_BUNDLE
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_COOKIE_HEADER
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION
+		// EXTRA_PROVISIONING_DEVICE_ADMIN_PACKAGE_NAME
+		// EXTRA_PROVISIONING_EMAIL_ADDRESS
+		// EXTRA_PROVISIONING_LOCALE
+		// EXTRA_PROVISIONING_LOCAL_TIME
+		// EXTRA_PROVISIONING_TIME_ZONE
+		// EXTRA_PROVISIONING_WIFI_HIDDEN
+		// EXTRA_PROVISIONING_WIFI_PAC_URL
+		// EXTRA_PROVISIONING_WIFI_PASSWORD
+		// EXTRA_PROVISIONING_WIFI_PROXY_BYPASS
+		// EXTRA_PROVISIONING_WIFI_PROXY_HOST
+		// EXTRA_PROVISIONING_WIFI_PROXY_PORT
+		// EXTRA_PROVISIONING_WIFI_SECURITY_TYPE
+		// EXTRA_PROVISIONING_WIFI_SSID
+		// FLAG_MANAGED_CAN_ACCESS_PARENT
+		// FLAG_PARENT_CAN_ACCESS_MANAGED
+		// KEYGUARD_DISABLE_FINGERPRINT
+		// KEYGUARD_DISABLE_SECURE_NOTIFICATIONS
+		// KEYGUARD_DISABLE_TRUST_AGENTS
+		// KEYGUARD_DISABLE_UNREDACTED_NOTIFICATIONS
+		// MIME_TYPE_PROVISIONING_NFC
+		// PASSWORD_QUALITY_NUMERIC_COMPLEX
+		
+		attemptHookMethod(DeviceAdminReceiver.class, "onLockTaskModeEntering", ComponentName.class, Intent.class, String.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onLockTaskModeExiting", ComponentName.class, Intent.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onProfileProvisioningComplete", ComponentName.class, Intent.class);
+		
+		// DeviceAdminReceiver Constants:
+		// ACTION_LOCK_TASK_ENTERING
+		// ACTION_LOCK_TASK_EXITING
+		// ACTION_PROFILE_PROVISIONING_COMPLETE
+		// EXTRA_LOCK_TASK_PACKAGE
+		
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1)
+			return;
+		
+		Log.v(TAG, "Hooking Lollipop MR1 Admin Methods");
+		
+		// DevicePolicyManager Constants:
+		// EXTRA_PROVISIONING_ACCOUNT_TO_MIGRATE
+		// EXTRA_PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED
+		// WIPE_RESET_PROTECTION_DATA
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
