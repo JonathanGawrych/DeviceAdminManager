@@ -31,6 +31,7 @@ public class HookController implements IXposedHookZygoteInit {
 	
 		HookFroyo();
 		HookGingerbread();
+		HookHoneycomb();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -123,6 +124,53 @@ public class HookController implements IXposedHookZygoteInit {
 		
 		// DevicePolicyManager Constants:
 		// WIPE_EXTERNAL_STORAGE
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void HookHoneycomb() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+			return;
+		
+		Log.d(TAG, "Hooking Honeycomb Admin Methods");
+		
+		// DeviceAdminInfo Constants:
+		// USES_ENCRYPTED_STORAGE
+		// USES_POLICY_EXPIRE_PASSWORD
+		
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordExpiration", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordExpirationTimeout", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordHistoryLength", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordMinimumLetters", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordMinimumLowerCase", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordMinimumNonLetter", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordMinimumNumeric", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordMinimumSymbols", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getPasswordMinimumUpperCase", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getStorageEncryption", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "getStorageEncryptionStatus");
+		attemptHookMethod(DevicePolicyManager.class, "hasGrantedPolicy", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordExpirationTimeout", ComponentName.class, long.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordHistoryLength", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordMinimumLetters", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordMinimumLowerCase", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordMinimumNonLetter", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordMinimumNumeric", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordMinimumSymbols", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setPasswordMinimumUpperCase", ComponentName.class, int.class);
+		attemptHookMethod(DevicePolicyManager.class, "setStorageEncryption", ComponentName.class, boolean.class);
+		
+		// DevicePolicyManager Constants:
+		// ACTION_START_ENCRYPTION
+		// ENCRYPTION_STATUS_ACTIVATING
+		// ENCRYPTION_STATUS_ACTIVE
+		// ENCRYPTION_STATUS_INACTIVE
+		// ENCRYPTION_STATUS_UNSUPPORTED
+		// PASSWORD_QUALITY_COMPLEX
+		
+		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordExpiring", ComponentName.class, Intent.class);
+		
+		// DeviceAdminReceiver Constants:
+		// ACTION_PASSWORD_EXPIRING
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
