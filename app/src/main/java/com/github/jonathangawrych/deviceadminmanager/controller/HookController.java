@@ -32,6 +32,7 @@ public class HookController implements IXposedHookZygoteInit {
 		HookFroyo();
 		HookGingerbread();
 		HookHoneycomb();
+		HookIceCreamSandwich();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
@@ -171,6 +172,23 @@ public class HookController implements IXposedHookZygoteInit {
 		
 		// DeviceAdminReceiver Constants:
 		// ACTION_PASSWORD_EXPIRING
+	}
+	
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	private void HookIceCreamSandwich() {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			return;
+		
+		Log.d(TAG, "Hooking IceCreamSandwich Admin Methods");
+		
+		// DeviceAdminInfo Constants:
+		// USES_POLICY_DISABLE_CAMERA
+		
+		attemptHookMethod(DevicePolicyManager.class, "getCameraDisabled", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "setCameraDisabled", ComponentName.class, boolean.class);
+		
+		// DevicePolicyManager Constants:
+		// PASSWORD_QUALITY_BIOMETRIC_WEAK
 	}
 	
 	private static XC_MethodHook passThough(final String name) {
