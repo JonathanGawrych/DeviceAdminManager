@@ -50,7 +50,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.FROYO)
-	private void HookFroyo() {
+	private static void HookFroyo() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO)
 			return;
 		
@@ -131,7 +131,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
-	private void HookGingerbread() {
+	private static void HookGingerbread() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD)
 			return;
 		
@@ -142,7 +142,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void HookHoneycomb() {
+	private static void HookHoneycomb() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
 			return;
 		
@@ -189,7 +189,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	private void HookIceCreamSandwich() {
+	private static void HookIceCreamSandwich() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 			return;
 		
@@ -206,7 +206,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	private void HookJellyBean() {
+	private static void HookJellyBean() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
 			return;
 		
@@ -238,7 +238,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-	private void HookLollipop() {
+	private static void HookLollipop() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
 			return;
 		
@@ -344,7 +344,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.M)
-	private void HookMarshmallow() {
+	private static void HookMarshmallow() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 			return;
 		
@@ -388,7 +388,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.N)
-	private void HookNougat() {
+	private static void HookNougat() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
 			return;
 		
@@ -448,7 +448,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.O)
-	private void HookOreo() {
+	private static void HookOreo() {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
 			return;
 		
@@ -509,7 +509,7 @@ public class HookController implements IXposedHookZygoteInit {
 	}
 	
 	@TargetApi(Build.VERSION_CODES.CUR_DEVELOPMENT)
-	private void HookPopsicle() {
+	private static void HookPopsicle() {
 		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
 			return;
 		
