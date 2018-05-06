@@ -2,11 +2,8 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<!-- These settings headers are only used on tablets. -->
-	<!-- example header:
 	<header
-		android:fragment="com.github.jonathangawrych.deviceadminmanager.gui.SettingsActivity$Category"
-		android:icon="@drawable/icon_category_24dp"
-		android:title="@string/pref_header_category" />
-	-->
+		android:fragment="com.github.jonathangawrych.deviceadminmanager.gui.PasswordPoliciesGui"
+		android:title="@string/pref_password_title" />
 
 </preference-headers>

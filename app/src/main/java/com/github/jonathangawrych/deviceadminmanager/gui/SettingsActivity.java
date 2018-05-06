@@ -1,20 +1,10 @@
 package com.github.jonathangawrych.deviceadminmanager.gui;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
-import android.view.MenuItem;
 
 import com.github.jonathangawrych.deviceadminmanager.R;
 
@@ -33,14 +23,14 @@ import java.util.List;
  */
 public class SettingsActivity extends PreferenceActivity {
 	
-	@SuppressWarnings("deprecation")
 	@Override
+	@SuppressWarnings("deprecation")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 			return;
 		
-		addPreferencesFromResource(R.xml.pref_category);
+		addPreferencesFromResource(R.xml.pref_passwords);
 	}
 	
 	/**
@@ -60,19 +50,6 @@ public class SettingsActivity extends PreferenceActivity {
 	protected boolean isValidFragment(String fragmentName) {
 		return Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB
 			|| PreferenceFragment.class.getName().equals(fragmentName)
-			|| CategoryPreferenceFragment.class.getName().equals(fragmentName);
-	}
-	
-	/**
-	 * This fragment shows general preferences only. It is used when the
-	 * activity is showing a two-pane settings UI.
-	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public static class CategoryPreferenceFragment extends PreferenceFragment {
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			addPreferencesFromResource(R.xml.pref_category);
-		}
+			|| PasswordPoliciesGui.class.getName().equals(fragmentName);
 	}
 }

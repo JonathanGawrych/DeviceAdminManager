@@ -1,3 +1,4 @@
 <resources>
 	<string name="app_name">Device Admin Manager</string>
+	<string name="pref_password_title">Password Policies</string>
 </resources>
