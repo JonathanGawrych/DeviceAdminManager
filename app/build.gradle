@@ -13,4 +13,6 @@ android {
 }
 
 dependencies {
+	compileOnly 'de.robv.android.xposed:api:53'
+	compileOnly 'de.robv.android.xposed:api:53:sources'
 }
