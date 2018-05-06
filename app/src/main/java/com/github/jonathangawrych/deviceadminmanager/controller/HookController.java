@@ -189,7 +189,7 @@ public class HookController implements IXposedHookZygoteInit {
 		// ENCRYPTION_STATUS_UNSUPPORTED
 		// PASSWORD_QUALITY_COMPLEX
 		
-		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordExpiring", ComponentName.class, Intent.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onPasswordExpiring", Context.class, Intent.class);
 		
 		// DeviceAdminReceiver Constants:
 		// ACTION_PASSWORD_EXPIRING
@@ -241,7 +241,7 @@ public class HookController implements IXposedHookZygoteInit {
 		
 		Log.v(TAG, "Hooking JellyBean MR2 Admin Methods");
 		
-		attemptHookMethod(DevicePolicyManager.class, "isDeviceOwnerApp", ComponentName.class);
+		attemptHookMethod(DevicePolicyManager.class, "isDeviceOwnerApp", String.class);
 	}
 	
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -259,7 +259,7 @@ public class HookController implements IXposedHookZygoteInit {
 		attemptHookMethod(DevicePolicyManager.class, "clearDeviceOwnerApp", String.class);
 		attemptHookMethod(DevicePolicyManager.class, "clearPackagePersistentPreferredActivities", ComponentName.class, String.class);
 		attemptHookMethod(DevicePolicyManager.class, "clearUserRestriction", ComponentName.class, String.class);
-		attemptHookMethod(DevicePolicyManager.class, "enableSystemApp", ComponentName.class, IntentFilter.class);
+		attemptHookMethod(DevicePolicyManager.class, "enableSystemApp", ComponentName.class, Intent.class);
 		attemptHookMethod(DevicePolicyManager.class, "enableSystemApp", ComponentName.class, String.class);
 		attemptHookMethod(DevicePolicyManager.class, "getAccountTypesWithManagementDisabled");
 		attemptHookMethod(DevicePolicyManager.class, "getApplicationRestrictions", ComponentName.class, String.class);
@@ -286,7 +286,7 @@ public class HookController implements IXposedHookZygoteInit {
 		attemptHookMethod(DevicePolicyManager.class, "setAutoTimeRequired", ComponentName.class, boolean.class);
 		attemptHookMethod(DevicePolicyManager.class, "setCrossProfileCallerIdDisabled", ComponentName.class, boolean.class);
 		attemptHookMethod(DevicePolicyManager.class, "setGlobalSetting", ComponentName.class, String.class, String.class);
-		attemptHookMethod(DevicePolicyManager.class, "setLockTaskPackages", ComponentName.class, String.class, String.class);
+		attemptHookMethod(DevicePolicyManager.class, "setLockTaskPackages", ComponentName.class, String[].class);
 		attemptHookMethod(DevicePolicyManager.class, "setMasterVolumeMuted", ComponentName.class, boolean.class);
 		attemptHookMethod(DevicePolicyManager.class, "setPermittedAccessibilityServices", ComponentName.class, List.class);
 		attemptHookMethod(DevicePolicyManager.class, "setPermittedInputMethods", ComponentName.class, List.class);
@@ -329,9 +329,9 @@ public class HookController implements IXposedHookZygoteInit {
 		// MIME_TYPE_PROVISIONING_NFC
 		// PASSWORD_QUALITY_NUMERIC_COMPLEX
 		
-		attemptHookMethod(DeviceAdminReceiver.class, "onLockTaskModeEntering", ComponentName.class, Intent.class, String.class);
-		attemptHookMethod(DeviceAdminReceiver.class, "onLockTaskModeExiting", ComponentName.class, Intent.class);
-		attemptHookMethod(DeviceAdminReceiver.class, "onProfileProvisioningComplete", ComponentName.class, Intent.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onLockTaskModeEntering", Context.class, Intent.class, String.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onLockTaskModeExiting", Context.class, Intent.class);
+		attemptHookMethod(DeviceAdminReceiver.class, "onProfileProvisioningComplete", Context.class, Intent.class);
 		
 		// DeviceAdminReceiver Constants:
 		// ACTION_LOCK_TASK_ENTERING
